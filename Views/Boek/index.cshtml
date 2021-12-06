@@ -1,0 +1,42 @@
+@model List<Boek>
+
+@{
+
+Layout = "";
+}
+
+<table style="border: 1px solid black;">
+    <tr>
+         <th>ISBN</th>
+         <th>Titel</th>
+         <th>Genre</th>
+         <th>Auteur</th>
+    </tr>
+
+    @foreach (var boek2 in @Model){
+        <tr>
+
+            <td style="border: 1px solid black;">@boek2.ISBN</td>
+            <td style="border: 1px solid black;">@boek2.Titel</td>
+            <td style="border: 1px solid black;">@boek2.Genre</td>
+            <td style="border: 1px solid black;">@boek2.Auteur</td>
+        </tr>
+    }
+</table>
+
+<form action="/boek/create" method="get">
+<input type="submit" value="Create">
+</form>
+
+<form action="/boek/delete" method="get">
+<input type="submit" value="Delete">
+</form>
+
+<form action="/boek/update" method="get">
+    <select id="ISBN" name="ISBN">
+        @foreach(var boek2 in @Model){
+        <option name ="ISBN" value="@boek2.ISBN">@boek2.ISBN</option>
+        }
+    </select>
+<input type="submit" value="Update">
+</form>

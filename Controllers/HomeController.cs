@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using WPFW9.Models;
+using WPFW6._1.Models;
 
-namespace WPFW9.Controllers
+namespace WPFW6._1.Controllers
 {
     public class HomeController : Controller
     {

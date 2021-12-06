@@ -1,6 +1,6 @@
 using System;
 
-namespace WPFW9.Models
+namespace WPFW6._1.Models
 {
     public class ErrorViewModel
     {
