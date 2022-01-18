@@ -2,15 +2,15 @@
 
 @{
 Layout = "";
-var yo = Boek.Boeken;
+@* var yo = Boek.Boeken; *@
 }
 
 @if(@Model == null){
     <p>Je hebt geen isbn op gegeven. Geef ISBN op:</p>
     <form action="/boek/genre" method="post">
         <select id="isbn">
-            @foreach(var boek2 in yo){
-            <option name ="isbn" value="@boek2.ISBN">@boek2.ISBN</option>
+            @* @foreach(var boek2 in yo){ *@
+            @* <option name ="isbn" value="@boek2.ISBN">@boek2.ISBN</option> *@
             }
         </select>
   <input type="submit">

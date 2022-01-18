@@ -1,37 +1,49 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WPFW6._1.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
+namespace WPFW6._1.Controllers
+{
 
 
 public class BoekController : Controller{
+    private readonly MijnContext _context;
 
-// public static List<Boek> boekenLijst = new List<Boek>();
-
-    public static List<Boek> Boekelijst(){
-        List<Boek> boeken3 = Boek.Boeken.ToList();
-        return boeken3;
+    public BoekController(MijnContext context)
+    {
+        _context = context;
     }
 
+    public static List<Boek> Boekelijst(MijnContext _context)
+    {
+    List<Boek> boeken3 = _context.Boeken.ToList();
+    return boeken3;
+    }
 
     public ViewResult Index(){
-
-        return View(Boek.Boeken);
+        ViewData["aantal"] = _context.Boeken.Count();
+        return View(_context.Boeken.ToList());
     }    
+
+
      
     public IActionResult aantal(string id){
-        ViewData["aantal"] = Boek.Boeken.Count(boek=>boek.Auteur == id);
+        ViewData["aantal"] = _context.Boeken.Count(boek=>boek.Auteur == id);
         ViewData["Auteur"] = id;
         return View();
     } 
     public IActionResult genre(string id){
-        Boek boek = Boek.Boeken.Where(boek=>boek.ISBN == id).SingleOrDefault();
+        Boek boek = _context.Boeken.Where(boek=>boek.ISBN == id).SingleOrDefault();
         return View(boek);
     }
 
       public IActionResult zoek(string id){
-        List<string> auteurs = Boek.Boeken
+        List<string> auteurs = _context.Boeken
         .Where(boek=>boek.Auteur.StartsWith(id))
         .GroupBy(boek=>boek.Auteur)
         .Select(g=>g.Key).ToList();
@@ -45,27 +57,24 @@ public class BoekController : Controller{
 
     [HttpPost]
     public IActionResult create(String ISBN, String Auteur, String Titel, String Genre){
-        List<Boek> nieuweLijst = Boekelijst();
-        nieuweLijst.Add(new Boek(ISBN, Auteur, Titel, Genre));
-
-        Boek.Boeken = nieuweLijst;
+        _context.Boeken.Add(new Boek{ISBN = ISBN, Auteur = Auteur, Titel = Titel, Genre = Genre});
+        _context.SaveChanges();
         return Redirect("index");
     }
 
+    
+
     [HttpGet]
     public IActionResult delete(){
-        return View();
+        return View(_context.Boeken.ToList());
     }
 
     [HttpPost]
     public IActionResult delete(String ISBN){
-        List<Boek> nieuweLijst = Boekelijst();
-
-        Boek boek6 = nieuweLijst.Where(boek=>boek.ISBN == ISBN).SingleOrDefault();
-  
-        nieuweLijst.Remove(boek6);
-
-        Boek.Boeken = nieuweLijst;
+        // List<Boek> nieuweLijst = Boekelijst();
+        Boek boek6 = _context.Boeken.Where(boek=>boek.ISBN == ISBN).SingleOrDefault();
+        _context.Boeken.Remove(boek6);
+        _context.SaveChanges();
 
         return Redirect("index");
     }
@@ -73,24 +82,26 @@ public class BoekController : Controller{
 
     [HttpGet]
     public IActionResult update(String ISBN){
-        Boek boek6 = Boekelijst().Where(boek=>boek.ISBN == ISBN).SingleOrDefault();
+        Boek boek6 = _context.Boeken.Where(boek=>boek.ISBN == ISBN).SingleOrDefault();
         return View(boek6);
     }
 
     [HttpPost]
     public IActionResult update(String ISBN, String Auteur, String Titel, String Genre){
 
-        Boek boek6 = Boekelijst().Where(boek=>boek.ISBN == ISBN).SingleOrDefault();
+        Boek boek6 = _context.Boeken.Where(boek=>boek.ISBN == ISBN).SingleOrDefault();
         boek6.ISBN = ISBN;
         boek6.Auteur = Auteur;
         boek6.Titel = Titel;
         boek6.Genre = Genre;
+        _context.SaveChanges();
         
         return Redirect("index");
     }
 
 
    
+}
 }
 
 
